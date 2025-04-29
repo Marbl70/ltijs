@@ -17,6 +17,7 @@ var _redirectUris = /*#__PURE__*/new WeakMap();
 var _customParameters = /*#__PURE__*/new WeakMap();
 var _autoActivate = /*#__PURE__*/new WeakMap();
 var _useDeepLinking = /*#__PURE__*/new WeakMap();
+var _messages = /*#__PURE__*/new WeakMap();
 var _logo = /*#__PURE__*/new WeakMap();
 var _description = /*#__PURE__*/new WeakMap();
 var _hostname = /*#__PURE__*/new WeakMap();
@@ -37,6 +38,7 @@ class DynamicRegistration {
     _classPrivateFieldInitSpec(this, _customParameters, void 0);
     _classPrivateFieldInitSpec(this, _autoActivate, void 0);
     _classPrivateFieldInitSpec(this, _useDeepLinking, void 0);
+    _classPrivateFieldInitSpec(this, _messages, void 0);
     _classPrivateFieldInitSpec(this, _logo, void 0);
     _classPrivateFieldInitSpec(this, _description, void 0);
     _classPrivateFieldInitSpec(this, _hostname, void 0);
@@ -52,6 +54,7 @@ class DynamicRegistration {
     _classPrivateFieldSet(_customParameters, this, options.customParameters || {});
     _classPrivateFieldSet(_autoActivate, this, options.autoActivate);
     _classPrivateFieldSet(_useDeepLinking, this, options.useDeepLinking === undefined ? true : options.useDeepLinking);
+    _classPrivateFieldSet(_messages, this, options.messages || []);
     _classPrivateFieldSet(_logo, this, options.logo);
     _classPrivateFieldSet(_description, this, options.description);
     _classPrivateFieldSet(_hostname, this, _assertClassBrand(_DynamicRegistration_brand, this, _getHostname).call(this, options.url));
@@ -76,12 +79,23 @@ class DynamicRegistration {
     const configuration = await got.get(openidConfiguration).json();
     provDynamicRegistrationDebug('Attempting to register Platform with issuer: ', configuration.issuer);
     // Building registration object
-    const messages = [{
-      type: 'LtiResourceLinkRequest'
-    }];
-    if (_classPrivateFieldGet(_useDeepLinking, this)) messages.push({
-      type: 'LtiDeepLinkingRequest'
-    });
+    const messages = [];
+
+    // When there are custom messages use those or else create default messages
+    if (_classPrivateFieldGet(_messages, this).length > 0) {
+      _classPrivateFieldGet(_messages, this).forEach(message => {
+        messages.push(message);
+      });
+    }
+    else {
+      messages.push({
+        type: 'LtiResourceLinkRequest'
+      });
+      if (_classPrivateFieldGet(_useDeepLinking, this)) messages.push({
+        type: 'LtiDeepLinkingRequest'
+      });
+    }
+
     const registration = Objects.deepMergeObjects({
       application_type: 'web',
       response_types: ['id_token'],

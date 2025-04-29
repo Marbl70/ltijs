@@ -181,6 +181,7 @@ class Provider {
      * @param {String} [options.dynReg.logo] - Tool Provider logo. (Ex: 'https://client.example.org/logo.png')
      * @param {String} [options.dynReg.description] - Tool Provider description. (Ex: 'Tool description')
      * @param {Array<String>} [options.dynReg.redirectUris] - Additional redirect URIs. (Ex: ['https://tool.example.com/launch'])
+     * @param {Array<Object} [options.dynReg.messages] - custom messages to support individual placements with Canvas LMS
      * @param {Object} [options.dynReg.customParameters] - Custom parameters object. (Ex: { key: 'value' })
      * @param {Boolean} [options.dynReg.autoActivate = false] - Platform auto activation flag. If true, every Platform registered dynamically is immediately activated. Defaults to false.
      * @param {Boolean} [options.dynReg.useDeepLinking = true] - Deep Linking usage flag. If true, sets up deep linking in the platform. Defaults to true.
